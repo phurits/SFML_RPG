@@ -85,7 +85,8 @@ void GameState::initPlayers()
 
 void GameState::initTileMap()
 {
-	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10, "Resources/Images/Tiles/Tiles.PNG");
+	//Change Tilemap here too (OWN COMMENT)
+	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10, "Resources/Images/Tiles/Tilemap_new.png");
 	this->tileMap->loadFromFile("test.mp");
 }
 

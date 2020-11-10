@@ -97,8 +97,9 @@ void EditorState::initGui()
 	this->selectorRect.setTexture(this->tileMap->getTileSheet());
 	this->selectorRect.setTextureRect(this->textureRect);
 
+	//Edit Size of Tilemap in EditorMode
 	this->textureSelector = new gui::TextureSelector(
-		20.f, 20.f, 500.f, 500.f,
+		20.f, 20.f, 1000.f, 1000.f,
 		this->stateData->gridSize ,this->tileMap->getTileSheet(),
 		this->font,"TS"
 	);
@@ -108,7 +109,7 @@ void EditorState::initGui()
 void EditorState::initTileMap()
 {
 	//Change All Tiles that can put in map(OWN COMMENT);
-	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10, "Resources/Images/Tiles/Mapmap.png");
+	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10, "Resources/Images/Tiles/Tilemap_new.png");
 }
 
 

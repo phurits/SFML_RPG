@@ -109,7 +109,7 @@ void EditorState::initGui()
 void EditorState::initTileMap()
 {
 	//Change All Tiles that can put in map(OWN COMMENT);
-	this->tileMap = new TileMap(this->stateData->gridSize, 10, 10, "Resources/Images/Tiles/Tilemap_new.png");
+	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_new.png");
 }
 
 
@@ -321,6 +321,7 @@ void EditorState::render(sf::RenderTarget* target)
 
 	target->setView(this->view);
 	this->tileMap->render(*target, this->mousePosGrid);
+	this->tileMap->renderDeferred(*target);
 
 	target->setView(this->window->getDefaultView());
 	this->renderButttons(*target);

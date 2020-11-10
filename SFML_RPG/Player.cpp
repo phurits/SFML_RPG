@@ -21,6 +21,7 @@ Player::Player(float x,float y, sf::Texture& texture_sheet)
 	this->createHitboxComponent(this->sprite, 20.f, 15.f,76.f, 90.f);
 	this->createMovementComponent(350.f, 1500.f, 500.f);
 	this->createAnimationComponent(texture_sheet);
+	this->createAttributeComponent(1);
 
 										// "NAME",F speed,Xstart,Ystart,posFX,posFY,Width,Height
 	this->animationComponent->addAnimation("IDLE", 11.f, 0, 4*130, 5, 4, 126, 130);
@@ -37,7 +38,44 @@ Player::~Player()
 
 }
 
+//Accessors
+
+AttributeComponent* Player::getAttributeComponent()
+{
+	return this->attributeComponent;
+}
+
 //Functions
+
+void Player::loseHP(const int hp)
+{
+	this->attributeComponent->hp -= hp;
+
+	if (this->attributeComponent->hp < 0)
+		this->attributeComponent->hp = 0;
+}
+
+void Player::gainHP(const int hp)
+{
+	this->attributeComponent->hp += hp;
+
+	if (this->attributeComponent->hp > this->attributeComponent->hpMax)
+		this->attributeComponent->hp = this->attributeComponent->hpMax;
+}
+
+void Player::loseEXP(const unsigned exp)
+{
+	this->attributeComponent->exp -= exp;
+
+	if (this->attributeComponent->exp < 0)
+		this->attributeComponent->exp = 0;
+}
+
+void Player::gainEXP(const unsigned exp)
+{
+	this->attributeComponent->gainExp(exp);
+}
+
 void Player::updateAttack()
 {
 	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))

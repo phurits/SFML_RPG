@@ -185,6 +185,7 @@ void GameState::update(const float& dt)
 	if (!this->paused) // Unpaused update
 	{
 		//HERE TO SET CAMERA VIEW AT ALL BORDER (OWN COMMENT)
+
 		this->updateView(dt);
 
 		this->updatePlayerInput(dt);

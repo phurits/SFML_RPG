@@ -10,7 +10,7 @@ void Game::initVariables()
 
 	this->dt = 0.f;
 
-	this->gridSize = 100.f;
+	this->gridSize = 32.f;
 }
 
 void Game::initGraphicsSettings()

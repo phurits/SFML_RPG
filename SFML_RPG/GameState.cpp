@@ -91,7 +91,7 @@ void GameState::initPlayerGUI()
 void GameState::initTileMap()
 {
 	//Change Tilemap here too (OWN COMMENT)
-	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_new.png");
+	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_done.png");
 	this->tileMap->loadFromFile("test.mp");
 }
 
@@ -146,10 +146,14 @@ void GameState::updatePlayerInput(const float& dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))))
 	{
 		this->player->move(0.f, -1.f, dt);
+		if(this->getKeytime())
+			this->player->gainEXP(10);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
 	{
 		this->player->move(0.f, 1.f, dt);
+		if (this->getKeytime())
+			this->player->loseEXP(10);
 	}
 
 	

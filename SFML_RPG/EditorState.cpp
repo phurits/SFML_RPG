@@ -82,8 +82,8 @@ void EditorState::initButtons()
 }
 
 void EditorState::initGui()
-{
-	this->sidebar.setSize(sf::Vector2f(80.f,static_cast<float>(this->stateData->gfxSettings->resolution.height)));
+{								/*SetSideBarSize[OWN]*/
+	this->sidebar.setSize(sf::Vector2f(40.f,static_cast<float>(this->stateData->gfxSettings->resolution.height)));
 	this->sidebar.setFillColor(sf::Color(50, 50, 50, 100));
 	this->sidebar.setOutlineColor(sf::Color(200, 200, 200, 150));
 	this->sidebar.setOutlineThickness(1.f);
@@ -99,9 +99,9 @@ void EditorState::initGui()
 
 	//Edit Size of Tilemap in EditorMode
 	this->textureSelector = new gui::TextureSelector(
-		20.f, 20.f, 1000.f, 1000.f,
+		20.f, 20.f, 800.f, 864.f,
 		this->stateData->gridSize ,this->tileMap->getTileSheet(),
-		this->font,"TS"
+		this->font,"SHOW\nHIDE"
 	);
 
 }
@@ -109,7 +109,7 @@ void EditorState::initGui()
 void EditorState::initTileMap()
 {
 	//Change All Tiles that can put in map(OWN COMMENT);
-	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_new.png");
+	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_done.png");
 }
 
 

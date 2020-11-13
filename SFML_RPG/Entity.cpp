@@ -45,7 +45,7 @@ void Entity::createAnimationComponent( sf::Texture& texture_sheet)
 	this->animationComponent = new AnimationComponent(this->sprite, texture_sheet);
 }
 
-void Entity::createAttributeComponent(const unsigned level)
+void Entity::createAttributeComponent(const int level)
 {
 	this->attributeComponent = new AttributeComponent(level);
 }

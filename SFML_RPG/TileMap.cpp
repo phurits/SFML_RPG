@@ -79,11 +79,11 @@ const sf::Texture* TileMap::getTileSheet() const
 
 const int TileMap::getLayerSize(const int x, const int y, const int layer) const
 {
-	if (x >= 0 && x < this->map.size())
+	if (x >= 0 && x < static_cast<int>(this->map.size()))
 	{
-		if (y >= 0 && y < this->map[x].size())
+		if (y >= 0 && y < static_cast<int>(this->map[x].size()))
 		{
-			if (layer >= 0 && layer < this->map[x][y].size())
+			if (layer >= 0 && layer < static_cast<int>(this->map[x][y].size()))
 			{
 				return this->map[x][y][layer].size();
 			}
@@ -378,25 +378,25 @@ void TileMap::render(sf::RenderTarget& target, const sf::Vector2i& gridPosition)
 {
 	this->layer = 0;
 
-	this->fromX = gridPosition.x - 4;
+	this->fromX = gridPosition.x - 50; //4
 	if (this->fromX < 0)
 		this->fromX = 0;
 	else if (this->fromX > this->maxSizeWorldGrid.x)
 		this->fromX = this->maxSizeWorldGrid.x;
 
-	this->toX = gridPosition.x + 5;
+	this->toX = gridPosition.x + 50;//5
 	if (this->toX < 0)
 		this->toX = 0;
 	else if (this->toX > this->maxSizeWorldGrid.x)
 		this->toX = this->maxSizeWorldGrid.x;
 
-	this->fromY = gridPosition.y - 3;
+	this->fromY = gridPosition.y - 50;//3
 	if (this->fromY < 0)
 		this->fromY = 0;
 	else if (this->fromY > this->maxSizeWorldGrid.y)
 		this->fromY = this->maxSizeWorldGrid.y;
 
-	this->toY = gridPosition.y + 5;
+	this->toY = gridPosition.y + 50;//5
 	if (this->toY < 0)
 		this->toY = 0;
 	else if (this->toY > this->maxSizeWorldGrid.y)

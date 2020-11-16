@@ -18,10 +18,10 @@ private:
 
     //Functions
     void initVariables();
-    void initBackground();
     void initFonts();
     void initKeybinds();
-    void initButtons();
+    void initGui();
+    void resetGui();
 
 public:
     MainMenuState(StateData* state_data);

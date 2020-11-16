@@ -1,6 +1,48 @@
 #include "stdafx.h"
 #include "Gui.h"
 
+const float gui::p2pX(const float perc, const sf::VideoMode& vm)
+{
+	/*
+	* Converts a percentage value to pixels relative to the current resolution in the X-axis.
+	*
+	* @param		float perc		The percentage value.
+	*  @param		sf::VideoMode& vm	The current videomode of the window (resolution).
+	*
+	* @return		float			The calculatied pixel value.
+	*
+	*/
+	return std::floor(static_cast<float>(vm.width) * (perc / 100.f));
+}
+
+const float gui::p2pY(const float perc, const sf::VideoMode& vm)
+{
+	/*
+	* Converts a percentage value to pixels relative to the current resolution in the Y-axis.
+	*
+	* @param		float perc			The percentage value.
+	* @param		sf::VideoMode& vm	The current videomode of the window (resolution).
+	*
+	* @return		float				The calculatied pixel value.
+	*
+	*/
+	return std::floor(static_cast<float>(vm.height) * (perc / 100.f));
+}
+
+const unsigned gui::calcCharSize(const sf::VideoMode& vm, const unsigned modifier)
+{
+	/*
+	* Calculates the character size for thext using the current resolution and a constant
+	*
+	* @param		sf::VideoMode& vm	The current videomode of the window (resolution).
+	* @param		unsigned modifier	Used to modify the character size in a more custom way.
+	* 
+	* @return		unsigned			The calculatied character size value.
+	*/
+	return static_cast<unsigned>((vm.width + vm.height) / modifier);
+}
+
+
 gui::Button::Button(float x, float y, float width, float height,
 	sf::Font* font, std::string text, unsigned character_size,
 	sf::Color text_idle_color, sf::Color text_hover_color, sf::Color text_active_color,

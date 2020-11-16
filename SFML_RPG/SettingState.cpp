@@ -6,19 +6,6 @@ void SettingState::initVariables()
 	this->modes = sf::VideoMode::getFullscreenModes();
 }
 
-void SettingState::initBackground()
-{
-	this->background.setSize(sf::Vector2f(
-		static_cast<float>(this->window->getSize().x),
-		static_cast<float>(this->window->getSize().y)));
-
-	if (!this->backgroundTexture.loadFromFile("Resources/Images/Backgrounds/Mainmenu.png"))
-	{
-		throw "ERROR::MAIN_MENU_STATE::FAILED_TO_LOAD_BACKGROUND_TEXTURE";
-	}
-
-	this->background.setTexture(&this->backgroundTexture);
-}
 
 void SettingState::initFonts()
 {
@@ -48,48 +35,93 @@ void SettingState::initKeybinds()
 
 void SettingState::initGui()
 {
+	const sf::VideoMode& vm = this->stateData->gfxSettings->resolution;
+
+	//Background
+	this->background.setSize(sf::Vector2f(
+		static_cast<float>(vm.width),
+		static_cast<float>(vm.height)
+	));
+
+	if (!this->backgroundTexture.loadFromFile("Resources/Images/Backgrounds/Mainmenu.png"))
+	{
+		throw "ERROR::MAIN_MENU_STATE::FAILED_TO_LOAD_BACKGROUND_TEXTURE";
+	}
+
+	this->background.setTexture(&this->backgroundTexture);
+
+	//Buttons
 	this->buttons["BACK"] = new gui::Button(
-		1500.f, 880.f, 250.f, 65.f,
-		&this->font, "Back", 50,
+		gui::p2pX(78.12f, vm), gui::p2pY(81.48f, vm),
+		gui::p2pX(13.02f, vm), gui::p2pY(6.01f, vm),
+		&this->font, "Back", gui::calcCharSize(vm),
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(100, 100, 100, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
 	this->buttons["APPLY"] = new gui::Button(
-		1300.f, 880.f, 250.f, 65.f,
-		&this->font, "Apply", 50,
+		gui::p2pX(67.70f, vm), gui::p2pY(81.48f, vm),
+		gui::p2pX(13.02f, vm), gui::p2pY(6.01f, vm),
+		&this->font, "Apply", gui::calcCharSize(vm),
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(100, 100, 100, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
+	//Modes
 	std::vector<std::string> modes_str;
 	for (auto & i : this->modes)
 	{
 		modes_str.push_back(std::to_string(i.width) + 'x' + std::to_string(i.height));
 	}
 
-	this->dropDownList["RESOLUTION"] = new gui::DropDownList(880, 400, 200, 50, font, modes_str.data(), modes_str.size());
-}
+	//Drop down lists
+	this->dropDownList["RESOLUTION"] = new gui::DropDownList(
+		gui::p2pX(45.f, vm), gui::p2pY(37.03f, vm),
+		gui::p2pX(10.41f, vm), gui::p2pY(4.62f, vm),
+		font, modes_str.data(), modes_str.size());
 
-void SettingState::initText()
-{
+	//Text init
 	this->optionsText.setFont(this->font);
-	this->optionsText.setPosition(sf::Vector2f(680.0f, 400.f));
-	this->optionsText.setCharacterSize(30);
-	this->optionsText.setFillColor(sf::Color(255, 255, 255, 200));
+	this->optionsText.setPosition(sf::Vector2f(gui::p2pX(35.41f,vm), gui::p2pY(37.03f, vm)));
+	this->optionsText.setCharacterSize(gui::calcCharSize(vm,70));
+	this->optionsText.setFillColor(sf::Color(20, 20, 20, 200));
 
 	this->optionsText.setString(
 		"Resolution \n\nFullscreen \n\nVsync \n\nAntialiasing \n\n"
 	);
 }
 
+void SettingState::resetGui()
+{
+	/*
+	* Clears the GUI elements and re-initialises the GUI.
+	* 
+	* @return void
+	* 
+	*/
+
+	auto it = this->buttons.begin();
+	for (it = this->buttons.begin(); it != this->buttons.end(); ++it)
+	{
+		delete it->second;
+	}
+	this->buttons.clear();
+
+	auto it2 = this->dropDownList.begin();
+	for (it2 = this->dropDownList.begin(); it2 != this->dropDownList.end(); ++it2)
+	{
+		delete it2->second;
+	}
+	this->dropDownList.clear();
+
+	this->initGui();
+}
+
 SettingState::SettingState(StateData* state_data)
 	:State(state_data)
 {
 	this->initVariables();
-	this->initBackground();
 	this->initFonts();
 	this->initKeybinds();
 	this->initGui();
-	this->initText();
 }
 
 SettingState::~SettingState()
@@ -139,6 +171,8 @@ void SettingState::updateGui(const float &dt)
 		this->stateData->gfxSettings->resolution = this->modes[this->dropDownList["RESOLUTION"]->getActiveElementId()];
 
 		this->window->create(this->stateData->gfxSettings->resolution,this->stateData->gfxSettings->title, sf::Style::Default);
+
+		this->resetGui();
 	}
 
 	//Dropdown lists

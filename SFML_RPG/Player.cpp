@@ -18,19 +18,28 @@ Player::Player(float x,float y, sf::Texture& texture_sheet)
 
 	this->setPosition(x, y);
 
-	this->createHitboxComponent(this->sprite, 20.f, 15.f,76.f, 90.f);
-	this->createMovementComponent(350.f, 1500.f, 500.f);
+	this->createHitboxComponent(this->sprite, 30.f, 15.f,66.f, 90.f);
+	this->createMovementComponent(300.f, 1600.f, 1000.f);
 	this->createAnimationComponent(texture_sheet);
 	this->createAttributeComponent(1);
 
 										// "NAME",F speed,Xstart,Ystart,posFX,posFY,Width,Height
-	this->animationComponent->addAnimation("IDLE", 11.f, 0, 4*130, 5, 4, 126, 130);
-	this->animationComponent->addAnimation("WALK_LEFT", 7.f, 0, 1*130, 5, 1, 126, 130);
-	this->animationComponent->addAnimation("WALK_RIGHT", 7.f, 0, 3 * 130, 5, 3, 126, 130);
-	this->animationComponent->addAnimation("WALK_UP", 7.f, 0, 0 * 130, 5, 0, 126, 130);
-	this->animationComponent->addAnimation("WALK_DOWN", 7.f, 0, 2 * 130, 5, 2, 126, 130);
+	this->animationComponent->addAnimation("IDLE", 11.f, 0, 4*126, 5, 4, 126, 126);
+	this->animationComponent->addAnimation("WALK_LEFT", 7.f, 0, 1*126, 5, 1, 126, 126);
+	this->animationComponent->addAnimation("WALK_RIGHT", 7.f, 0, 3 * 126, 5, 3, 126, 126);
+	this->animationComponent->addAnimation("WALK_UP", 7.f, 0, 0 * 126, 5, 0, 126, 126);
+	this->animationComponent->addAnimation("WALK_DOWN", 7.f, 0, 2 * 126, 5, 2, 126, 126);
 	this->animationComponent->addAnimation("ATTACK", 5.f, 0, 650, 6, 5, 160, 176); //Error
 
+	//Visual Weapon
+	if(!this->weapon_texture.loadFromFile("Resources/Images/Sprites/Player/bow.png"))
+		throw "ERROR::PLAYER::COULD_NOT_LOAD_WEAPON_TEXTURE";
+	this->weapon_sprite.setTexture(this->weapon_texture);
+	this->weapon_sprite.setOrigin(
+		this->weapon_sprite.getGlobalBounds().width / 2.f,
+		this->weapon_sprite.getGlobalBounds().height
+	);
+	this->weapon_sprite.setScale(0.3, 0.3);
 }
 
 Player::~Player()
@@ -49,26 +58,17 @@ AttributeComponent* Player::getAttributeComponent()
 
 void Player::loseHP(const int hp)
 {
-	this->attributeComponent->hp -= hp;
-
-	if (this->attributeComponent->hp < 0)
-		this->attributeComponent->hp = 0;
+	this->attributeComponent->loseHP(hp);
 }
 
 void Player::gainHP(const int hp)
 {
-	this->attributeComponent->hp += hp;
-
-	if (this->attributeComponent->hp > this->attributeComponent->hpMax)
-		this->attributeComponent->hp = this->attributeComponent->hpMax;
+	this->attributeComponent->gainHP(hp);
 }
 
 void Player::loseEXP(const int exp)
 {
-	this->attributeComponent->exp -= exp;
-
-	if (this->attributeComponent->exp < 0)
-		this->attributeComponent->exp = 0;
+	this->attributeComponent->loseEXP(exp);
 }
 
 void Player::gainEXP(const int exp)
@@ -78,40 +78,18 @@ void Player::gainEXP(const int exp)
 
 void Player::updateAttack()
 {
-	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	//{
-	//	this->attacking = true;
-	//}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		this->attacking = true;
+	}
 }
 
 void Player::updateAnimation(const float& dt)
 {
-	// Use when Sprite Sheet have attack or not need to use
-	//if (this->attacking)
-	//{
-	//	//Set origin depending on direction
-	//	if (this->sprite.getScale().x > 0.f) //Facing left
-	//	{
-	//		this->sprite.setOrigin(96.f, 0.f);
-	//	}
-	//	else//Facing right
-	//	{
-	//		this->sprite.setOrigin(258.f + 96.f, 0.f);
-	//	}
-	//	//Animate and check for animation end
-	//	if (this->animationComponent->play("ATTACK", dt, true))
-	//	{
-	//		this->attacking = false;
-	//		if (this->sprite.getScale().x > 0.f) //Facing left
-	//		{
-	//			this->sprite.setOrigin(0.f, 0.f);
-	//		}
-	//		else//Facing right
-	//		{
-	//			this->sprite.setOrigin(258.f, 0.f);
-	//		}
-	//	}
-	//}
+	if (this->attacking)
+	{
+
+	}
 
 	if (this->attacking)
 	{
@@ -124,30 +102,23 @@ void Player::updateAnimation(const float& dt)
 	}
 	else if (this->movementComponent->getState(MOVING_LEFT))
 	{
-		//if (this->sprite.getScale().x < 0.f)
-		//{
-		//	this->sprite.setOrigin(0.f, 0.f);
-		//	this->sprite.setScale(1.f, 1.f);
-		//}
 		this->animationComponent->play("WALK_LEFT", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
 	}
 	else if (this->movementComponent->getState(MOVING_RIGHT))
 	{
-		//if (this->sprite.getScale().x > 0.f)
-		//{
-		//	this->sprite.setOrigin(125.f, 0.f);
-		//	this->sprite.setScale(-1.f, 1.f);
-		//}
 		this->animationComponent->play("WALK_RIGHT", dt, this->movementComponent->getVelocity().x, this->movementComponent->getMaxVelocity());
 	}
 	else if (this->movementComponent->getState(MOVING_UP))
+	{
 		this->animationComponent->play("WALK_UP", dt, this->movementComponent->getVelocity().y, this->movementComponent->getMaxVelocity());
+	}
 	else if (this->movementComponent->getState(MOVING_DOWN))
+	{
 		this->animationComponent->play("WALK_DOWN", dt, this->movementComponent->getVelocity().y, this->movementComponent->getMaxVelocity());
-
+	}
 }
 
-void Player::update(const float& dt)
+void Player::update(const float& dt, sf::Vector2f& mouse_pos_view)
 {
 	this->movementComponent->update(dt);
 	
@@ -156,11 +127,24 @@ void Player::update(const float& dt)
 	this->updateAnimation(dt);
 	
 	this->hitboxComponent->update();
+
+	//Update visual weapon
+	this->weapon_sprite.setPosition(this->getCenter().x, this->getPosition().y + this->getGlobalBounds().height);
+
+	float dX = mouse_pos_view.x - this->weapon_sprite.getPosition().x;
+	float dY = mouse_pos_view.y - this->weapon_sprite.getPosition().y;
+
+	const float PI = 3.14159265;
+	float deg = atan2(dY, dX) * 180 / PI;
+
+	this->weapon_sprite.setRotation(deg + 90);
 }
 
-void Player::render(sf::RenderTarget& target)
+void Player::render(sf::RenderTarget& target, const bool show_hitbox)
 {
 	target.draw(this->sprite);
+	target.draw(this->weapon_sprite);
 
-	this->hitboxComponent->render(target);
+	if(show_hitbox)
+		this->hitboxComponent->render(target);
 }

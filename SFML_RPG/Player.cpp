@@ -29,7 +29,7 @@ Player::Player(float x,float y, sf::Texture& texture_sheet)
 	this->animationComponent->addAnimation("WALK_RIGHT", 7.f, 0, 3 * 126, 5, 3, 126, 126);
 	this->animationComponent->addAnimation("WALK_UP", 7.f, 0, 0 * 126, 5, 0, 126, 126);
 	this->animationComponent->addAnimation("WALK_DOWN", 7.f, 0, 2 * 126, 5, 2, 126, 126);
-	this->animationComponent->addAnimation("ATTACK", 5.f, 0, 650, 6, 5, 160, 176); //Error
+	//this->animationComponent->addAnimation("ATTACK", 5.f, 0, 650, 6, 5, 160, 176); //Error
 
 	//Visual Weapon
 	if(!this->weapon_texture.loadFromFile("Resources/Images/Sprites/Player/bow.png"))
@@ -78,10 +78,10 @@ void Player::gainEXP(const int exp)
 
 void Player::updateAttack()
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		this->attacking = true;
-	}
+	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	//{
+	//	this->attacking = true;
+	//}
 }
 
 void Player::updateAnimation(const float& dt)

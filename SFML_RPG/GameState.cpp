@@ -16,6 +16,7 @@ void GameState::initDeferredRender()
 			this->stateData->gfxSettings->resolution.height
 		)
 	);
+
 }
 
 //Initializer Function
@@ -92,8 +93,7 @@ void GameState::initPlayerGUI()
 void GameState::initTileMap()
 {
 	//Change Tilemap here too (OWN COMMENT)
-	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_done.png");
-	this->tileMap->loadFromFile("test.mp");
+	this->tileMap = new TileMap("test.mp");
 }
 
 //Constructor / Destructor
@@ -129,22 +129,31 @@ void GameState::updateView(const float& dt)
 		std::floor(this->player->getPosition().y + (static_cast<float>(this->mousePosWindow.y) - static_cast<float>(this->stateData->gfxSettings->resolution.height / 2))/ 10.f)
 	);											// + mouse Position
 
-	if (this->view.getCenter().x - this->view.getSize().x / 2.f < 0.f)
+	if (this->tileMap->getMaxSizeF().x >= this->view.getSize().x)
 	{
-		this->view.setCenter(0.f + this->view.getSize().x / 2.f, this->view.getCenter().y);
+		if (this->view.getCenter().x - this->view.getSize().x / 2.f < 0.f)
+		{
+			this->view.setCenter(0.f + this->view.getSize().x / 2.f, this->view.getCenter().y);
+		}
+		else if (this->view.getCenter().x + this->view.getSize().x / 2.f > 2560.f) //this->tileMap->getMaxSizeF().x 
+		{
+			this->view.setCenter(2560.f - this->view.getSize().x / 2.f, this->view.getCenter().y);
+		}
 	}
-	else if (this->view.getCenter().x + this->view.getSize().x / 2.f > 2560.f)
+	if (this->tileMap->getMaxSizeF().y >= this->view.getSize().y)
 	{
-		this->view.setCenter(2560.f - this->view.getSize().x / 2.f, this->view.getCenter().y);
+		if (this->view.getCenter().y - this->view.getSize().y / 2.f < 0.f)
+		{
+			this->view.setCenter(this->view.getCenter().x, 0.f + this->view.getSize().y / 2.f);
+		}
+		else if (this->view.getCenter().y + this->view.getSize().y / 2.f > 2592.f) //this->tileMap->getMaxSizeF().y
+		{
+			this->view.setCenter(this->view.getCenter().x, 2592.f - this->view.getSize().y / 2.f);
+		}
 	}
-	if (this->view.getCenter().y - this->view.getSize().y / 2.f < 0.f)
-	{
-		this->view.setCenter(this->view.getCenter().x, 0.f + this->view.getSize().y / 2.f);
-	}
-	else if (this->view.getCenter().y + this->view.getSize().y / 2.f > 2592.f)
-	{
-		this->view.setCenter(this->view.getCenter().x, 2592.f - this->view.getSize().y / 2.f);
-	}
+
+	this->viewGridPosition.x = static_cast<int>(this->view.getCenter().x) / static_cast<int>(this->stateData->gridSize);
+	this->viewGridPosition.y = static_cast<int>(this->view.getCenter().y) / static_cast<int>(this->stateData->gridSize);
 
 }
 
@@ -234,7 +243,13 @@ void GameState::render(sf::RenderTarget* target)
 	this->renderTexture.clear();
 
 	this->renderTexture.setView(this->view);
-	this->tileMap->render(this->renderTexture, this->player->getGridPosition(static_cast<int>(this->stateData->gridSize)), false);
+
+	this->tileMap->render(
+		this->renderTexture,
+		this->viewGridPosition,
+		this->player->getCenter(),
+		false
+	);
 
 	this->player->render(this->renderTexture, false);
 

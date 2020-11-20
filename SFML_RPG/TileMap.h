@@ -31,11 +31,15 @@ private:
 
 public:
 	TileMap(float gridSize, int width, int height,std::string texture_file);
+	TileMap(const std::string file_name);
 	virtual ~TileMap();
 
 	//Accessors
+	const bool tileEmpty(const int x, const int y, const int z) const;
 	const sf::Texture* getTileSheet() const;
 	const int getLayerSize(const int x,const int y,const int layer) const;
+	const sf::Vector2i& getMaxSizeGrid() const;
+	const sf::Vector2f& getMaxSizeF() const;
 
 	//Functions
 	void addTile(const int x, const int y, const int z, const sf::IntRect& texture_rect, const bool& collision, const short& type);
@@ -46,7 +50,11 @@ public:
 	void updateCollision(Entity* entity, const float& dt);
 
 	void update();
-	void render(sf::RenderTarget& target, const sf::Vector2i& gridPosition, const bool show_collision = false);
+	void render(
+		sf::RenderTarget& target,
+		const sf::Vector2i& gridPosition, 
+		const sf::Vector2f playerPosition,
+		const bool show_collision = false);
 	void renderDeferred(sf::RenderTarget& target);
 	
 };

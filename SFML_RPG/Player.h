@@ -17,6 +17,7 @@ private:
     //Initializer Functions
     void initVariables();
     void initComponents();
+    void initAnimation();
 
 
 public:

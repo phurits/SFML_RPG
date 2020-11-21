@@ -1,17 +1,14 @@
 #include "stdafx.h"
-#include "Player.h"
-//Initializer functions
-void Player::initVariables()
-{
-	this->attacking = false;
-}
+#include "Enemy.h"
 
-void Player::initComponents()
+//Initializer functions
+void Enemy::initVariables()
 {
 	
 }
 
-void Player::initAnimation()
+
+void Enemy::initAnimations()
 {
 	// "NAME",F speed,Xstart,Ystart,posFX,posFY,Width,Height
 	this->animationComponent->addAnimation("IDLE", 11.f, 0, 4 * 126, 5, 4, 126, 126);
@@ -25,75 +22,26 @@ void Player::initAnimation()
 }
 
 //Constructors / Destructors
-Player::Player(float x,float y, sf::Texture& texture_sheet)
+Enemy::Enemy(EnemySpawner& enemy_spawner, float x, float y, sf::Texture& texture_sheet)
+	:enemySpawner(enemy_spawner)
 {
 	this->initVariables();
 
-	this->createHitboxComponent(this->sprite, 30.f, 15.f,66.f, 90.f);
+	this->createHitboxComponent(this->sprite, 30.f, 15.f, 66.f, 90.f);
 	this->createMovementComponent(300.f, 1600.f, 1000.f);
 	this->createAnimationComponent(texture_sheet);
-	this->createAttributeComponent(1);
-	this->createSkillComponent();
 
 	this->setPosition(x, y);
-	this->initAnimation();
+	this->initAnimations();
 
 }
 
-Player::~Player()
+Enemy::~Enemy()
 {
-
 }
 
-//Accessors
-
-AttributeComponent* Player::getAttributeComponent()
+void Enemy::updateAnimation(const float& dt)
 {
-	return this->attributeComponent;
-}
-
-//Functions
-
-void Player::loseHP(const int hp)
-{
-	this->attributeComponent->loseHP(hp);
-}
-
-void Player::gainHP(const int hp)
-{
-	this->attributeComponent->gainHP(hp);
-}
-
-void Player::loseEXP(const int exp)
-{
-	this->attributeComponent->loseEXP(exp);
-}
-
-void Player::gainEXP(const int exp)
-{
-	this->attributeComponent->gainExp(exp);
-}
-
-void Player::updateAttack()
-{
-	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	//{
-	//	this->attacking = true;
-	//}
-}
-
-void Player::updateAnimation(const float& dt)
-{
-	if (this->attacking)
-	{
-
-	}
-
-	if (this->attacking)
-	{
-		if (this->animationComponent->play("ATTACK", dt, true))
-			this->attacking = false;
-	}
 	if (this->movementComponent->getState(IDLE))
 	{
 		this->animationComponent->play("IDLE", dt);
@@ -116,24 +64,21 @@ void Player::updateAnimation(const float& dt)
 	}
 }
 
-void Player::update(const float& dt, sf::Vector2f& mouse_pos_view)
+void Enemy::update(const float& dt, sf::Vector2f& mouse_pos_view)
 {
 	this->movementComponent->update(dt);
-	
-	this->updateAttack();
+
+	//this->updateAttack();
 
 	this->updateAnimation(dt);
-	
-	this->hitboxComponent->update();
 
-	this->sword.update(mouse_pos_view,this->getCenter());
+	this->hitboxComponent->update();
 }
 
-void Player::render(sf::RenderTarget& target, const bool show_hitbox)
+void Enemy::render(sf::RenderTarget& target, const bool show_hitbox)
 {
-	this->sword.render(target);
 	target.draw(this->sprite);
 
-	if(show_hitbox)
+	if (show_hitbox)
 		this->hitboxComponent->render(target);
 }

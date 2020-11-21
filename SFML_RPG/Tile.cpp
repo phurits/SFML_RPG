@@ -64,6 +64,7 @@ const std::string Tile::getAsString() const
 
 void Tile::update()
 {
+
 }
 
 void Tile::render(sf::RenderTarget& target)

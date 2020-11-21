@@ -82,7 +82,7 @@ void GameState::initPauseMenu()
 
 void GameState::initPlayers()
 {
-	this->player = new Player(0, 0, this->textures["PLAYER_SHEET"]);
+	this->player = new Player(2030, 200, this->textures["PLAYER_SHEET"]);
 }
 
 void GameState::initPlayerGUI()
@@ -110,6 +110,7 @@ GameState::GameState(StateData* state_data)
 	this->initPlayers();
 	this->initPlayerGUI();
 	this->initTileMap();
+
 }
 
 GameState::~GameState()
@@ -118,6 +119,7 @@ GameState::~GameState()
 	delete this->player;
 	delete this->playerGUI;
 	delete this->tileMap;
+
 }
 
 //Functions
@@ -203,8 +205,7 @@ void GameState::updatePauseMenuButtons()
 
 void GameState::updateTileMap(const float& dt)
 {
-	this->tileMap->update();
-	this->tileMap->updateCollision(this->player, dt);
+	this->tileMap->update(this->player, dt);
 }
 
 void GameState::update(const float& dt)
@@ -226,6 +227,7 @@ void GameState::update(const float& dt)
 		this->player->update(dt, this->mousePosView);
 
 		this->playerGUI->update(dt);
+
 
 	}
 	else // Paused update
@@ -253,7 +255,10 @@ void GameState::render(sf::RenderTarget* target)
 
 	this->player->render(this->renderTexture, false);
 
+
 	this->tileMap->renderDeferred(this->renderTexture);
+
+
 
 	//RENDER GUI
 	this->renderTexture.setView(this->renderTexture.getDefaultView());

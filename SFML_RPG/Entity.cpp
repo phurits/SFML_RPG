@@ -7,6 +7,7 @@ void Entity::initVariables()
 	this->movementComponent = NULL;
 	this->animationComponent = NULL;
 	this->attributeComponent = NULL;
+	this->skillComponent = NULL;
 }
 
 Entity::Entity()
@@ -20,6 +21,7 @@ Entity::~Entity()
 	delete this->movementComponent;
 	delete this->animationComponent;
 	delete this->attributeComponent;
+	delete this->skillComponent;
 }
 
 //Component functions
@@ -48,6 +50,11 @@ void Entity::createAnimationComponent( sf::Texture& texture_sheet)
 void Entity::createAttributeComponent(const int level)
 {
 	this->attributeComponent = new AttributeComponent(level);
+}
+
+void Entity::createSkillComponent()
+{
+	this->skillComponent = new SkillComponent();
 }
 
 //Accessors
@@ -122,6 +129,11 @@ void Entity::move( const float dir_x, const float dir_y,const float& dt)
 {
 	if (this->movementComponent)
 		this->movementComponent->move(dir_x,dir_y,dt ); // Sets velocity
+
+	if (this->skillComponent)
+	{
+		this->skillComponent->gainExp(SKILLS::ENDURANCE, 1);
+	}
 }
 
 void Entity::stopVelocity()

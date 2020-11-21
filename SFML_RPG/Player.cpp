@@ -22,6 +22,8 @@ Player::Player(float x,float y, sf::Texture& texture_sheet)
 	this->createMovementComponent(300.f, 1600.f, 1000.f);
 	this->createAnimationComponent(texture_sheet);
 	this->createAttributeComponent(1);
+	this->createSkillComponent();
+
 
 										// "NAME",F speed,Xstart,Ystart,posFX,posFY,Width,Height
 	this->animationComponent->addAnimation("IDLE", 11.f, 0, 4*126, 5, 4, 126, 126);
@@ -31,15 +33,6 @@ Player::Player(float x,float y, sf::Texture& texture_sheet)
 	this->animationComponent->addAnimation("WALK_DOWN", 7.f, 0, 2 * 126, 5, 2, 126, 126);
 	//this->animationComponent->addAnimation("ATTACK", 5.f, 0, 650, 6, 5, 160, 176); //Error
 
-	//Visual Weapon
-	if(!this->weapon_texture.loadFromFile("Resources/Images/Sprites/Player/bow.png"))
-		throw "ERROR::PLAYER::COULD_NOT_LOAD_WEAPON_TEXTURE";
-	this->weapon_sprite.setTexture(this->weapon_texture);
-	this->weapon_sprite.setOrigin(
-		this->weapon_sprite.getGlobalBounds().width / 2.f,
-		this->weapon_sprite.getGlobalBounds().height
-	);
-	this->weapon_sprite.setScale(0.3, 0.3);
 }
 
 Player::~Player()
@@ -128,22 +121,13 @@ void Player::update(const float& dt, sf::Vector2f& mouse_pos_view)
 	
 	this->hitboxComponent->update();
 
-	//Update visual weapon
-	this->weapon_sprite.setPosition(this->getCenter().x, this->getPosition().y + this->getGlobalBounds().height);
-
-	float dX = mouse_pos_view.x - this->weapon_sprite.getPosition().x;
-	float dY = mouse_pos_view.y - this->weapon_sprite.getPosition().y;
-
-	const float PI = 3.14159265;
-	float deg = atan2(dY, dX) * 180 / PI;
-
-	this->weapon_sprite.setRotation(deg + 90);
+	this->sword.update(mouse_pos_view,this->getCenter());
 }
 
 void Player::render(sf::RenderTarget& target, const bool show_hitbox)
 {
+	this->sword.render(target);
 	target.draw(this->sprite);
-	target.draw(this->weapon_sprite);
 
 	if(show_hitbox)
 		this->hitboxComponent->render(target);

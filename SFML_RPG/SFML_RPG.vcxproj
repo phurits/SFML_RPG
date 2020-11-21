@@ -167,6 +167,7 @@
     <ClCompile Include="PlayerGUI.cpp" />
     <ClCompile Include="RangeWeapon.cpp" />
     <ClCompile Include="SettingState.cpp" />
+    <ClCompile Include="SkillComponent.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -196,6 +197,7 @@
     <ClInclude Include="PlayerGUI.h" />
     <ClInclude Include="RangeWeapon.h" />
     <ClInclude Include="SettingState.h" />
+    <ClInclude Include="SkillComponent.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Sword.h" />

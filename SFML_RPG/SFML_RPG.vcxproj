@@ -150,8 +150,10 @@
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="AttributeComponent.cpp" />
     <ClCompile Include="Bow.cpp" />
+    <ClCompile Include="DefaultEditorMode.cpp" />
     <ClCompile Include="EditorMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyEditorMode.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="GraphicsSettings.cpp" />
     <ClCompile Include="Gui.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="RangeWeapon.cpp" />
     <ClCompile Include="SettingState.cpp" />
     <ClCompile Include="SkillComponent.cpp" />
+    <ClCompile Include="Slime.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -184,8 +187,11 @@
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="AttributeComponent.h" />
     <ClInclude Include="Bow.h" />
+    <ClInclude Include="DefaultEditorMode.h" />
     <ClInclude Include="EditorMode.h" />
+    <ClInclude Include="EditorModes.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyEditorMode.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="GraphicsSettings.h" />
     <ClInclude Include="Gui.h" />
@@ -193,6 +199,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Enemies_include.h" />
     <ClInclude Include="HitboxComponent.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="MainMenuState.h" />
@@ -204,6 +211,7 @@
     <ClInclude Include="RangeWeapon.h" />
     <ClInclude Include="SettingState.h" />
     <ClInclude Include="SkillComponent.h" />
+    <ClInclude Include="Slime.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Sword.h" />

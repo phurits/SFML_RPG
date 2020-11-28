@@ -69,7 +69,10 @@ void GameState::initTextures()
 	{
 		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_PLAYER_PLAYER_TEXTURE";
 	}
-
+	if (!this->textures["SLIME_SHEET"].loadFromFile("Resources/Images/Sprites/Enemy/slime.png"))
+	{
+		throw "ERROR::GAME_STATE::COULD_NOT_LOAD_ENEMY_SLIME_TEXTURE";
+	}
 }
 
 void GameState::initPauseMenu()
@@ -111,6 +114,12 @@ GameState::GameState(StateData* state_data)
 	this->initPlayerGUI();
 	this->initTileMap();
 
+	this->activeEnemies.push_back(new Slime(200.f, 100.f, this->textures["SLIME_SHEET"]));
+	this->activeEnemies.push_back(new Slime(500.f, 200.f, this->textures["SLIME_SHEET"]));
+	this->activeEnemies.push_back(new Slime(900.f, 300.f, this->textures["SLIME_SHEET"]));
+	this->activeEnemies.push_back(new Slime(400.f, 700.f, this->textures["SLIME_SHEET"]));
+	this->activeEnemies.push_back(new Slime(700.f, 800.f, this->textures["SLIME_SHEET"]));
+
 }
 
 GameState::~GameState()
@@ -119,6 +128,11 @@ GameState::~GameState()
 	delete this->player;
 	delete this->playerGUI;
 	delete this->tileMap;
+	
+	for (size_t i = 0; i < this->activeEnemies.size(); i++)
+	{
+		delete this->activeEnemies[i];
+	}
 
 }
 
@@ -178,17 +192,9 @@ void GameState::updatePlayerInput(const float& dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_RIGHT"))))
 		this->player->move(1.f, 0.f,dt);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_UP"))))
-	{
 		this->player->move(0.f, -1.f, dt);
-		if(this->getKeytime())
-			this->player->gainEXP(10);
-	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keybinds.at("MOVE_DOWN"))))
-	{
 		this->player->move(0.f, 1.f, dt);
-		if (this->getKeytime())
-			this->player->loseEXP(10);
-	}
 	
 }
 
@@ -206,6 +212,11 @@ void GameState::updatePauseMenuButtons()
 void GameState::updateTileMap(const float& dt)
 {
 	this->tileMap->update(this->player, dt);
+
+	for (auto* i : this->activeEnemies)
+	{
+		this->tileMap->update(i, dt);
+	}
 }
 
 void GameState::update(const float& dt)
@@ -228,6 +239,10 @@ void GameState::update(const float& dt)
 
 		this->playerGUI->update(dt);
 
+		for (auto* i : this->activeEnemies)
+		{
+			i->update(dt, this->mousePosView);
+		}
 
 	}
 	else // Paused update
@@ -253,12 +268,14 @@ void GameState::render(sf::RenderTarget* target)
 		false
 	);
 
+	for (auto* i : this->activeEnemies)
+	{
+		i->render(this->renderTexture, true);
+	}
+
 	this->player->render(this->renderTexture, false);
 
-
 	this->tileMap->renderDeferred(this->renderTexture);
-
-
 
 	//RENDER GUI
 	this->renderTexture.setView(this->renderTexture.getDefaultView());

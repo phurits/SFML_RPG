@@ -10,19 +10,20 @@ class Enemy :
 {
 private:
     //Variables
-    EnemySpawner& enemySpawner;
+    //EnemySpawner& enemySpawner;
 
     //initializer functions
-    void initVariables();
-    void initAnimations();
+    virtual void initVariables() = 0;
+    virtual void initAnimations() = 0;
+
 public:
-    Enemy(EnemySpawner& enemy_spawner,float x, float y, sf::Texture& texture_sheet);
+    Enemy();
     virtual ~Enemy();
 
     //Functions
-    void updateAnimation(const float& dt);
+    virtual void updateAnimation(const float& dt) = 0;
 
-    void update(const float& dt, sf::Vector2f& mouse_pos_view);
-    void render(sf::RenderTarget& target, const bool show_hitbox);
+    virtual void update(const float& dt, sf::Vector2f& mouse_pos_view) = 0;
+    virtual void render(sf::RenderTarget& target, const bool show_hitbox) = 0;
 };
 

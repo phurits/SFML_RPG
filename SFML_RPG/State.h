@@ -18,6 +18,7 @@ public:
 	GraphicsSettings* gfxSettings;
 	std::map<std::string, int>* supportedKeys;
 	std::stack<State*>* states;
+	sf::View* view;
 
 };
 
@@ -31,6 +32,7 @@ protected:
 	sf::RenderWindow* window;
 	std::map<std::string, int>* supportedKeys;
 	std::map<std::string, int> keybinds;
+	sf::View* view;
 	bool quit;
 	bool paused;
 	float keytime;

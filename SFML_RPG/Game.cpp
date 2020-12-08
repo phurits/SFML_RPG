@@ -123,6 +123,11 @@ void Game::updateSFMLEvents()
 		{
 			this->window->close();
 		}
+		if (this->sfEvent.type == sf::Event::TextEntered)
+		{
+
+		}
+		
 	}
 }
 
@@ -135,8 +140,8 @@ void Game::update()
 		if (this->window->hasFocus())
 		{
 			this->states.top()->update(this->dt);
-
 			if (this->states.top()->getQuit())
+			
 			{
 				this->states.top()->endState();
 				delete this->states.top();
@@ -150,7 +155,6 @@ void Game::update()
 		this->endApplication();
 		this->window->close();
 	}
-
 
 }
 

@@ -7,6 +7,7 @@ State::State(StateData* state_data)
 	this->window = state_data->window;
 	this->supportedKeys = state_data->supportedKeys;
 	this->states = state_data->states;
+	this->view = state_data->view;
 	this->quit = false;
 	this->paused = false;
 	this->keytime = 0.f;

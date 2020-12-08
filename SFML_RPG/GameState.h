@@ -6,8 +6,7 @@
 #include "PlayerGUI.h"
 #include "Sword.h"
 #include "Bow.h"
-#include "Enemy.h"
-#include "Enemies_include.h"
+#include "Fairy.h"
 
 class PauseMenu;
 class Player;
@@ -28,17 +27,26 @@ private:
     sf::RenderTexture renderTexture;
     sf::Sprite renderSprite;
 
+    sf::Vector2f aimDir;
+    sf::Vector2f aimDirNorm;
+
     sf::Font font;
     PauseMenu* pmenu;
 
     Player* player;
+    Fairy* fairy;
     PlayerGUI* playerGUI;
     sf::Texture texture;
 
+    std::vector<Enemy*> activeEnemies;
+    EnemySystem *enemySystem;
     
     TileMap* tileMap;
 
-    std::vector<Enemy*> activeEnemies;
+    Bullet b1;
+    std::vector<Bullet> bullets;
+  
+
 
     //Functions
     void initDeferredRender();
@@ -48,7 +56,9 @@ private:
     void initTextures();
     void initPauseMenu();
     void initPlayers();
+    void initFairy();
     void initPlayerGUI();
+    void initEnemySystem();
     void initTileMap();
 
 public:
@@ -62,6 +72,8 @@ public:
     void updatePlayerGUI(const float& dt);
     void updatePauseMenuButtons();
     void updateTileMap(const float& dt);
+    void updatePlayer(const float& dt);
+    void updateEnemies(const float& dt);
     void update(const float& dt);
     void render(sf::RenderTarget* target = NULL);
 

@@ -87,7 +87,7 @@ void EditorState::initGui()
 void EditorState::initTileMap()
 {
 	//Change All Tiles that can put in map(OWN COMMENT);
-	this->tileMap = new TileMap(this->stateData->gridSize, 100, 100, "Resources/Images/Tiles/Tilemap_done.png");
+	this->tileMap = new TileMap(this->stateData->gridSize, 80, 80, "Resources/Images/Tiles/Tilemap_done.png");
 }
 
 void EditorState::initModes()

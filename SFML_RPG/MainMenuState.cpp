@@ -4,7 +4,6 @@
 //Initializer functions
 void MainMenuState::initVariables()
 {
-
 }
 
 void MainMenuState::initFonts()
@@ -13,6 +12,14 @@ void MainMenuState::initFonts()
 	{
 		throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
 	}
+}
+
+void MainMenuState::initTexts()
+{
+	this->input = "";
+	this->text.setFont(this->font);
+	this->text.setCharacterSize(25.f);
+	this->text.setPosition(sf::Vector2f(this->view->getCenter().x - 100, 310.f));
 }
 
 void MainMenuState::initKeybinds()
@@ -58,27 +65,40 @@ void MainMenuState::initGui()
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
-	this->buttons["SETTINGS_STATE"] = new gui::Button(
+	this->buttons["HIGHSCORE_STATE"] = new gui::Button(
 		gui::p2pX(45.83f, vm), gui::p2pY(44.44f, vm),
 		gui::p2pX(13.02f, vm), gui::p2pY(6.01, vm),
-		&this->font, "Settings", gui::calcCharSize(vm),
+		&this->font, "Highscore", gui::calcCharSize(vm),
+		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
+		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
+
+	this->buttons["SETTINGS_STATE"] = new gui::Button(
+		gui::p2pX(45.83f, vm), gui::p2pY(53.7f, vm),
+		gui::p2pX(13.02f, vm), gui::p2pY(6.01, vm),
+		&this->font, "Setting", gui::calcCharSize(vm),
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
 	this->buttons["EDITOR_STATE"] = new gui::Button(
-		gui::p2pX(45.83f, vm), gui::p2pY(53.7f, vm),
+		gui::p2pX(45.83f, vm), gui::p2pY(62.96f, vm),
 		gui::p2pX(13.02f, vm), gui::p2pY(6.01, vm),
 		&this->font, "Editor", gui::calcCharSize(vm),
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
-		sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
+		sf::Color(100, 100, 100, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
 	this->buttons["EXIT_STATE"] = new gui::Button(
-		gui::p2pX(45.83f, vm), gui::p2pY(62.96f, vm),
+		gui::p2pX(45.83f, vm), gui::p2pY(81.48f, vm),
 		gui::p2pX(13.02f, vm), gui::p2pY(6.01, vm),
 		&this->font, "Quit", gui::calcCharSize(vm),
 		sf::Color(70, 70, 70, 200), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50),
 		sf::Color(100, 100, 100, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
+	//Top Left Name
+	this->text.setFont(this->font);
+	this->text.setString("63010769 | PHURIT SARARATTANAKUL");
+	this->text.setFillColor(sf::Color::Black);
+	this->text.setCharacterSize(30);
+	this->text.setPosition(0, 0);
 }
 
 void MainMenuState::resetGui()
@@ -108,6 +128,9 @@ MainMenuState::MainMenuState(StateData* state_data)
 	this->initKeybinds();
 	this->initGui();
 	this->resetGui();
+	
+	
+	
 }
 
 MainMenuState::~MainMenuState()
@@ -117,6 +140,7 @@ MainMenuState::~MainMenuState()
 	{
 		delete it->second;
 	}
+
 }
 
 
@@ -139,6 +163,12 @@ void MainMenuState::updateButtons()
 		this->states->push(new GameState(this->stateData));
 	}
 
+	//Highscore
+	if (this->buttons["HIGHSCORE_STATE"]->isPressed())
+	{
+		this->states->push(new HighscoreState(this->stateData));
+	}
+
 	//Settings
 	if (this->buttons["SETTINGS_STATE"]->isPressed())
 	{
@@ -151,20 +181,50 @@ void MainMenuState::updateButtons()
 		this->states->push(new EditorState(this->stateData));
 	}
 
-	//Quti the game
+	//Quit the game
 	if (this->buttons["EXIT_STATE"]->isPressed())
 	{
 		this->endState();
 	}
+
+	
 }
 
 void MainMenuState::update(const float& dt)
 {
+
+	while (this->window->pollEvent(this->nameEvent))
+	{
+		if (this->nameEvent.type == sf::Event::TextEntered)
+		{
+			if (this->nameEvent.text.unicode < 128)
+			{
+				std::cout << "Text entered: " << (this->nameEvent.text.unicode) << std::endl;
+				if (this->nameEvent.text.unicode == static_cast<sf::Uint32>(8) && this->input.getSize() > 0)
+				{
+					this->input.erase(this->input.getSize() - 1);
+					this->nameString.erase(this->nameString.size() - 1);
+				}
+				else
+				{
+					if (this->input.getSize() < 13 && this->nameEvent.text.unicode != 13)
+					{
+						if (this->nameEvent.text.unicode >= 97 && this->nameEvent.text.unicode <= 122)
+						{
+							this->nameEvent.text.unicode -= 32;
+						}
+						this->input += this->nameEvent.text.unicode;
+						this->nameString += this->nameEvent.text.unicode;
+					}
+				}
+
+			}
+		}
+	}
 	this->updateMousePositions();
 	this->updateInput(dt);
-
 	this->updateButtons();
-
+	
 }
 
 void MainMenuState::renderButttons(sf::RenderTarget& target)
@@ -175,6 +235,8 @@ void MainMenuState::renderButttons(sf::RenderTarget& target)
 	}
 }
 
+
+
 void MainMenuState::render(sf::RenderTarget* target)
 {
 	if (!target)
@@ -183,6 +245,9 @@ void MainMenuState::render(sf::RenderTarget* target)
 	target->draw(this->background);
 
 	this->renderButttons(*target);
+
+	target->draw(this->textHolder);
+	target->draw(this->text);
 
 	////REMOVE LATER!!!
 	//sf::Text mouseText;

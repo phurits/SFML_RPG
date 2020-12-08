@@ -46,6 +46,16 @@ void PlayerGUI::initHPBar()
 	);
 }
 
+void PlayerGUI::initScore()
+{
+	this->score = new gui::ProgressBar(
+		920.f, 1.f, 0.f, 0.f,
+		this->player->getAttributeComponent()->expNext,
+		sf::Color::Black, 120,
+		this->vm, &this->font
+	);
+}
+
 PlayerGUI::PlayerGUI(Player* player, sf::VideoMode& vm)
 	:vm(vm)
 {
@@ -107,6 +117,6 @@ void PlayerGUI::renderHPBar(sf::RenderTarget& target)
 void PlayerGUI::render(sf::RenderTarget& target)
 {
 	this->renderLevelBar(target);
-	this->renderEXPBar(target);
+	//this->renderEXPBar(target);
 	this->renderHPBar(target);
 }

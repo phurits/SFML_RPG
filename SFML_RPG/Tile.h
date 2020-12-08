@@ -13,21 +13,22 @@ protected:
 
 public:
 	Tile();
-	Tile(int grid_x, int grid_y, float gridSizeF,const sf::Texture& texture, const sf::IntRect &texture_rect,
-		bool collision = false, short type = TileTypes::DEFAULT);
+	Tile(short type,int grid_x, int grid_y, float gridSizeF,
+		const sf::Texture& texture, const sf::IntRect &texture_rect,
+		const bool collision);
 	virtual ~Tile();
 
 	//Accessors
 	const short& getType() const;
+	virtual const bool & getCollision() const;
 
 	//Functions
-	const bool& getCollision() const;
-	const sf::Vector2f& getPosition() const;
-	const sf::FloatRect getGlobalBounds() const;
-	const bool intersects(const sf::FloatRect bounds) const;
-	const std::string getAsString() const;
+	virtual const sf::Vector2f& getPosition() const;
+	virtual const sf::FloatRect getGlobalBounds() const;
+	virtual const bool intersects(const sf::FloatRect bounds) const;
+	virtual const std::string getAsString() const = 0;
 
-	virtual void update();
-	virtual void render(sf::RenderTarget& target);
+	virtual void update() = 0;
+	virtual void render(sf::RenderTarget& target) = 0;
 };
 

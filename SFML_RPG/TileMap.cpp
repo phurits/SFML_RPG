@@ -146,8 +146,21 @@ void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect& 
 	{
 		
 		/*OK To add Tile.*/
-		this->map[x][y][z].push_back(new Tile(x, y, this->gridSizeF, this->tileSheet, texture_rect, collision, type));
-		std::cout << "DEBUG: ADDED TILE!" << "\n";
+		this->map[x][y][z].push_back(new RegularTile(type,x, y, this->gridSizeF, this->tileSheet, texture_rect, collision));
+
+		//std::cout << "DEBUG: ADDED TILE!" << "\n";
+	}
+}
+
+void TileMap::addTile(const int x, const int y, const int z, const sf::IntRect& texture_rect,
+	const int enemy_type,const int enemy_amount, const int enemy_tts, const int enemy_md)
+{
+	if (x < this->maxSizeWorldGrid.x && x >= 0 &&
+		y < this->maxSizeWorldGrid.y && y >= 0 &&
+		z < this->layers && z >= 0)
+	{
+		this->map[x][y][z].push_back(new EnemySpawnerTile(x, y, this->gridSizeF, this->tileSheet, texture_rect,
+			enemy_type, enemy_amount, enemy_tts, enemy_md));
 	}
 }
 
@@ -193,7 +206,11 @@ void TileMap::saveToFile(const std::string file_name)
 	texture file
 
 	All tiles:
-	gridPos x y layer, Texture rect x y , collision, type
+	type
+	gridPos x y layer
+	Texture rect x y 
+	collision
+	tile_specific...
 	*/
 
 	std::ofstream out_file;
@@ -219,7 +236,7 @@ void TileMap::saveToFile(const std::string file_name)
 						{
 							out_file << x << " " << y << " " << z << " " <<
 								this->map[x][y][z][k]->getAsString()
-								<< " "; //MAKE SURE THIS LAST SPACE IS NOT SAVED!!!
+								<< " ";
 						}
 					}
 				}
@@ -288,18 +305,47 @@ void TileMap::loadFromFile(const std::string file_name)
 			std::cout << "ERROR::TILEMAP::FAILED TO LAOD TILETEXTURESHEET::FILENAME: " << texture_file << "\n";
 
 		//Load all tiles
-		while (in_file >> x >> y >> z >> trX >> trY >> collision >> type)
+		while (in_file >> x >> y >> z >> type)
 		{
-			this->map[x][y][z].push_back(
-				new Tile(
-				x, y,
-				this->gridSizeF,
-				this->tileSheet,
-				sf::IntRect(trX, trY, this->gridSizeI, this->gridSizeI),
-				collision,
-				type
-			)
-			);
+			if (type == TileTypes::ENEMYSPAWNER)
+			{
+				//Amount, time, max distance
+				int enemy_type = 0,
+					enemy_am = 0,
+					enemy_tts = 0,
+					enemy_md = 0;
+
+				in_file >> trX >> trY
+					>> enemy_type >> enemy_am >> enemy_tts >> enemy_md;
+
+				this->map[x][y][z].push_back(
+					new EnemySpawnerTile(
+						x, y,
+						this->gridSizeF,
+						this->tileSheet,
+						sf::IntRect(trX, trY, this->gridSizeI, this->gridSizeI),
+						enemy_type,
+						enemy_am,
+						enemy_tts,
+						enemy_md
+					)
+				);
+			}
+			else
+			{
+				in_file >> trX >> trY >> collision;
+
+				this->map[x][y][z].push_back(
+					new RegularTile(
+						type,
+						x, y,
+						this->gridSizeF,
+						this->tileSheet,
+						sf::IntRect(trX, trY, this->gridSizeI, this->gridSizeI),
+						collision
+					)
+				);
+			}
 		}
 	}
 	else
@@ -316,7 +362,7 @@ const bool TileMap::checkType(const int x, const int y, const int z, const int t
 	return this->map[x][y][this->layer].back()->getType() == type;
 }
 
-void TileMap::update(Entity* entity, const float& dt)
+void TileMap::updateWorldBoundsCollision(Entity* entity, const float& dt)
 {
 	//WORLD BOUNDS
 	if (entity->getPosition().x < 0.f)
@@ -339,7 +385,10 @@ void TileMap::update(Entity* entity, const float& dt)
 		entity->setPosition(entity->getPosition().x, this->maxSizeWorldF.y - entity->getGlobalBounds().height);
 		entity->stopVelocityY();
 	}
+}
 
+void TileMap::updateTileCollision(Entity* entity, const float& dt)
+{
 	//TILES
 	this->layer = 0;
 
@@ -373,8 +422,6 @@ void TileMap::update(Entity* entity, const float& dt)
 		{
 			for (size_t k = 0; k < this->map[x][y][this->layer].size(); k++)
 			{
-				this->map[x][y][this->layer][k]->update();
-
 				sf::FloatRect playerBounds = entity->getGlobalBounds();
 				sf::FloatRect wallBounds = this->map[x][y][this->layer][k]->getGlobalBounds();
 				sf::FloatRect nextPositionBounds = entity->getNextPositionBounds(dt);
@@ -430,6 +477,66 @@ void TileMap::update(Entity* entity, const float& dt)
 			}
 		}
 	}
+}
+
+void TileMap::updateTiles(Entity* entity, const float& dt, 
+	EnemySystem& enemySystem)
+{
+	//TILES
+	this->layer = 0;
+
+	this->fromX = entity->getGridPosition(this->gridSizeI).x - 40;
+	if (this->fromX < 0)
+		this->fromX = 0;
+	else if (this->fromX > this->maxSizeWorldGrid.x)
+		this->fromX = this->maxSizeWorldGrid.x;
+
+	this->toX = entity->getGridPosition(this->gridSizeI).x + 40;
+	if (this->toX < 0)
+		this->toX = 0;
+	else if (this->toX > this->maxSizeWorldGrid.x)
+		this->toX = this->maxSizeWorldGrid.x;
+
+	this->fromY = entity->getGridPosition(this->gridSizeI).y - 22;
+	if (this->fromY < 0)
+		this->fromY = 0;
+	else if (this->fromY > this->maxSizeWorldGrid.y)
+		this->fromY = this->maxSizeWorldGrid.y;
+
+	this->toY = entity->getGridPosition(this->gridSizeI).y + 22;
+	if (this->toY < 0)
+		this->toY = 0;
+	else if (this->toY > this->maxSizeWorldGrid.y)
+		this->toY = this->maxSizeWorldGrid.y;
+
+	for (int x = this->fromX; x < this->toX; x++)
+	{
+		for (int y = fromY; y < this->toY; y++)
+		{
+			for (size_t k = 0; k < this->map[x][y][this->layer].size(); k++)
+			{
+				this->map[x][y][this->layer][k]->update();
+
+				if (this->map[x][y][this->layer][k]->getType() == TileTypes::ENEMYSPAWNER)
+				{
+					EnemySpawnerTile* es = dynamic_cast<EnemySpawnerTile*>(this->map[x][y][this->layer][k]);
+					if (es)
+					{
+						if (!es->getSpawned())
+						{						
+							enemySystem.createEnemy(SLIME, x * this->gridSizeF, y * this->gridSizeF);
+							es->setSpawned(true);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void TileMap::update(Entity* entity, const float& dt)
+{
+	
 }
 
 void TileMap::render(

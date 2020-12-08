@@ -2,6 +2,10 @@
 
 enum button_states { BTN_IDLE = 0, BTN_HOVER, BTN_ACTIVE };
 
+#define DELETE_KEY 8
+#define ENTER_KEY 13
+#define ESCAPE_KEY 27
+
 namespace gui
 {
 
@@ -139,5 +143,34 @@ namespace gui
 		void update(const int current_value);
 		void render(sf::RenderTarget& target);
 	};
+
+	class Textbox
+	{
+	private:
+		sf::Text textbox;
+		sf::Font* font;
+		std::ostringstream text;
+		bool isSelected = false;
+		bool hasLimit = false;
+		int limit = 10;
+
+		void inputLogic(int charTyped);
+		void deleteLastChar();
+
+	public:
+		Textbox(float _x,float _y,int size, bool sel,sf::Font* font);
+		virtual ~Textbox();
+
+		void setLimit(bool Tof);
+		void setLimit(bool Tof, int lim);
+		void setSelected(bool sel);
+		std::string getText();
+		void typedOn(sf::Event input);
+
+		void update();
+		void render(sf::RenderTarget& target);
+	};
+
+
 }
 

@@ -26,10 +26,14 @@ private:
 	//HP BAR
 	gui::ProgressBar* hpBar;
 
+	//Score
+	gui::ProgressBar* score;
+
 	void initFont();
 	void initLevelBar();
 	void initEXPBar();
 	void initHPBar();
+	void initScore();
 
 public:
 	PlayerGUI(Player* player, sf::VideoMode& vm);

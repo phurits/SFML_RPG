@@ -1,39 +1,30 @@
 #pragma once
-
 #include "Entity.h"
-
-#include "Sword.h"
-
-class Entity;
-
-class Player :
+#include "Bullet.h"
+class Fairy :
     public Entity
 {
 private:
     //Variables
     bool attacking;
-    
+
+    sf::Vector2f getCenter;
+    sf::Vector2f mousePosWindow;
+    sf::Vector2f aimDir;
+    sf::Vector2f aimDirNorm;
 
     //Initializer Functions
     void initVariables();
-    void initComponents();
     void initAnimations();
 
 
 public:
-    Player(float x, float y, sf::Texture& texture_sheet);
-    virtual ~Player();
-
-    //Accessors
-    AttributeComponent* getAttributeComponent();
+    Fairy(float x, float y, sf::Texture& texture_sheet);
+    virtual ~Fairy();
 
     //Functions
-    void loseHP(const int hp);
-    void gainHP(const int hp);
-    void loseEXP(const int exp);
-    void gainEXP(const int exp);
-    void updateAttack();
     void updateAnimation(const float& dt);
+    void updateBulletLine(sf::Vector2f& mouse_pos_view);
     void update(const float& dt, sf::Vector2f& mouse_pos_view);
 
     void render(sf::RenderTarget& target, const bool show_hitbox = false);

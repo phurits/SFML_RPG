@@ -31,12 +31,6 @@
     <Filter Include="Item">
       <UniqueIdentifier>{9e75e76f-7fc5-4f97-85a6-f2083d9cc7ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Item\MeleeWeapon">
-      <UniqueIdentifier>{a6942096-3389-4dc0-b95f-0c5c88040be2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Item\RangeWeapon">
-      <UniqueIdentifier>{990ec075-c4fe-4b7a-98e9-b15650ab685b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="States\Editor Modes">
       <UniqueIdentifier>{268dbd06-e5ea-4e92-a378-7673fc1c17c4}</UniqueIdentifier>
     </Filter>
@@ -46,11 +40,17 @@
     <Filter Include="Entities\Enemies">
       <UniqueIdentifier>{1fdb5e66-c6a3-4f87-9109-b5d46c6a0a0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Item\Weapons">
+      <UniqueIdentifier>{95f6b749-8876-410d-8817-8845f6426781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Item\Weapons\RangeWeapon">
+      <UniqueIdentifier>{990ec075-c4fe-4b7a-98e9-b15650ab685b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Item\Weapons\MeleeWeapon">
+      <UniqueIdentifier>{a6942096-3389-4dc0-b95f-0c5c88040be2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -112,25 +112,22 @@
       <Filter>Item</Filter>
     </ClCompile>
     <ClCompile Include="MeleeWeapon.cpp">
-      <Filter>Item\MeleeWeapon</Filter>
+      <Filter>Item\Weapons\MeleeWeapon</Filter>
     </ClCompile>
     <ClCompile Include="Sword.cpp">
-      <Filter>Item\MeleeWeapon</Filter>
+      <Filter>Item\Weapons\MeleeWeapon</Filter>
     </ClCompile>
     <ClCompile Include="RangeWeapon.cpp">
-      <Filter>Item\RangeWeapon</Filter>
+      <Filter>Item\Weapons\RangeWeapon</Filter>
     </ClCompile>
     <ClCompile Include="Bow.cpp">
-      <Filter>Item\RangeWeapon</Filter>
+      <Filter>Item\Weapons\RangeWeapon</Filter>
     </ClCompile>
     <ClCompile Include="SkillComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="EditorMode.cpp">
       <Filter>States\Editor Modes</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemySpawner.cpp">
-      <Filter>Map\Tile</Filter>
     </ClCompile>
     <ClCompile Include="DefaultEditorMode.cpp">
       <Filter>States\Editor Modes</Filter>
@@ -143,6 +140,36 @@
     </ClCompile>
     <ClCompile Include="Slime.cpp">
       <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="HighscoreState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="RegularTile.cpp">
+      <Filter>Map\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawnerTile.cpp">
+      <Filter>Map\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySystem.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Fairy.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AIFollow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AIComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AIOption.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,25 +234,22 @@
       <Filter>Item</Filter>
     </ClInclude>
     <ClInclude Include="MeleeWeapon.h">
-      <Filter>Item\MeleeWeapon</Filter>
+      <Filter>Item\Weapons\MeleeWeapon</Filter>
     </ClInclude>
     <ClInclude Include="Sword.h">
-      <Filter>Item\MeleeWeapon</Filter>
+      <Filter>Item\Weapons\MeleeWeapon</Filter>
     </ClInclude>
     <ClInclude Include="RangeWeapon.h">
-      <Filter>Item\RangeWeapon</Filter>
+      <Filter>Item\Weapons\RangeWeapon</Filter>
     </ClInclude>
     <ClInclude Include="Bow.h">
-      <Filter>Item\RangeWeapon</Filter>
+      <Filter>Item\Weapons\RangeWeapon</Filter>
     </ClInclude>
     <ClInclude Include="SkillComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="EditorMode.h">
       <Filter>States\Editor Modes</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemySpawner.h">
-      <Filter>Map\Tile</Filter>
     </ClInclude>
     <ClInclude Include="DefaultEditorMode.h">
       <Filter>States\Editor Modes</Filter>
@@ -242,8 +266,32 @@
     <ClInclude Include="Slime.h">
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Enemies_include.h">
+    <ClInclude Include="HighscoreState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="RegularTile.h">
+      <Filter>Map\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawnerTile.h">
+      <Filter>Map\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySystem.h">
       <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Fairy.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AIFollow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AIComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AIOption.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

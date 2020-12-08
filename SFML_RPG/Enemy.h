@@ -1,9 +1,9 @@
 #pragma once
 #include "Entity.h"
-#include "EnemySpawner.h"
+#include "EnemySpawnerTile.h"
 
 class Entity;
-class EnemySpawner;
+class EnemySpawnerTile;
 
 class Enemy :
     public Entity

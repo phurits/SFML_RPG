@@ -11,7 +11,7 @@ void Player::initComponents()
 	
 }
 
-void Player::initAnimation()
+void Player::initAnimations()
 {
 	// "NAME",F speed,Xstart,Ystart,posFX,posFY,Width,Height
 	this->animationComponent->addAnimation("IDLE", 11.f, 0, 4 * 126, 5, 4, 126, 126);
@@ -36,7 +36,7 @@ Player::Player(float x,float y, sf::Texture& texture_sheet)
 	this->createSkillComponent();
 
 	this->setPosition(x, y);
-	this->initAnimation();
+	this->initAnimations();
 
 }
 
@@ -126,12 +126,12 @@ void Player::update(const float& dt, sf::Vector2f& mouse_pos_view)
 	
 	this->hitboxComponent->update();
 
-	this->sword.update(mouse_pos_view,this->getCenter());
+	//this->sword.update(mouse_pos_view,this->getCenter());
 }
 
 void Player::render(sf::RenderTarget& target, const bool show_hitbox)
 {
-	this->sword.render(target);
+	//this->sword.render(target);
 	target.draw(this->sprite);
 
 	if(show_hitbox)

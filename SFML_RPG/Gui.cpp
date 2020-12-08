@@ -474,3 +474,124 @@ void gui::ProgressBar::render(sf::RenderTarget& target)
 	target.draw(this->inner);
 	target.draw(this->text);
 }
+
+//TEXTBOX========================================================================
+void gui::Textbox::inputLogic(int charTyped)
+{
+	if (charTyped != DELETE_KEY && charTyped != ENTER_KEY && charTyped != ESCAPE_KEY)
+	{
+		this->text << static_cast<char>(charTyped);
+	}
+	else if (charTyped == DELETE_KEY)
+	{
+		if (this->text.str().length() > 0)
+		{
+			this->deleteLastChar();
+		}
+	}
+	this->textbox.setString(text.str() + "_");
+}
+
+void gui::Textbox::deleteLastChar()
+{
+	std::string t = this->text.str();
+	std::string newT = "";
+	for (int i = 0; i < t.length() - 1; i++)
+	{
+		newT += t[i];
+	}
+	this->text.str("");
+	this->text << newT;
+
+	this->textbox.setString(this->text.str());
+}
+
+gui::Textbox::Textbox(float _x, float _y, int size, bool sel, sf::Font* font)
+{
+	this->textbox.setPosition(sf::Vector2f(_x, _y));
+	this->textbox.setCharacterSize(size);
+	this->textbox.setFillColor(sf::Color::Black);
+	this->isSelected = sel;
+
+	this->font = font;
+	this->textbox.setFont(*this->font);
+
+	if (sel)
+	{
+		this->textbox.setString("_");
+	}
+	else
+	{
+		this->textbox.setString("");
+	}
+}
+
+gui::Textbox::~Textbox()
+{
+}
+
+void gui::Textbox::setLimit(bool Tof)
+{
+	this->hasLimit = Tof;
+}
+
+void gui::Textbox::setLimit(bool Tof, int lim)
+{
+	this->hasLimit = Tof;
+	this->limit = lim;
+}
+
+void gui::Textbox::setSelected(bool sel)
+{
+	this->isSelected = sel;
+	if (!sel)
+	{
+		std::string t = this->text.str();
+		std::string newT = "";
+		for (int i = 0; i < t.length() - 1; i++)
+		{
+			newT += t[i];
+		}
+		this->textbox.setString(newT);
+	}
+}
+
+std::string gui::Textbox::getText()
+{
+	return this->text.str();
+}
+
+void gui::Textbox::update()
+{
+}
+
+void gui::Textbox::render(sf::RenderTarget& target)
+{
+	target.draw(this->textbox);
+}
+
+void gui::Textbox::typedOn(sf::Event input)
+{
+	if (this->isSelected)
+	{
+		int charTyped = input.text.unicode;
+		if (charTyped < 128)
+		{
+			if (this->hasLimit)
+			{
+				if (this->text.str().length() <= this->limit)
+				{
+					inputLogic(charTyped);
+				}
+				else if (this->text.str().length() > this->limit && charTyped == DELETE_KEY)
+				{
+					this->deleteLastChar();
+				}
+			}
+			else
+			{
+				inputLogic(charTyped);
+			}
+		}
+	}
+}
